@@ -12,7 +12,7 @@ resource "aws_lb" "application_load_balancer" {
   }
 }
 
-# create target group
+# Update target group with new matcher
 resource "aws_lb_target_group" "alb_target_group" {
   name        = "${var.project_name}-${var.environment}-tg"
   target_type = var.target_type
@@ -23,7 +23,7 @@ resource "aws_lb_target_group" "alb_target_group" {
   health_check {
     healthy_threshold   = 5
     interval            = 30
-    matcher             = "200,301,302"
+    matcher             = "200"  # Only accept 200 OK as healthy
     path                = "/"
     port                = "traffic-port"
     protocol            = "HTTP"
@@ -31,6 +31,7 @@ resource "aws_lb_target_group" "alb_target_group" {
     unhealthy_threshold = 2
   }
 }
+
 
 # create a listener on port 80 with redirect action
 resource "aws_lb_listener" "alb_http_listener" {
